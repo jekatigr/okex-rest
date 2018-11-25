@@ -12,10 +12,9 @@ var OKEX = function (api_key, secret, server, timeout) {
   this.timeout = timeout || 20000;
 };
 
-var headers = {"contentType": "application/x-www-form-urlencoded",
-                "User-Agent": "OKEX JavaScript API Wrapper"};
+var headers = {"contentType": "application/x-www-form-urlencoded"};
 
-OKEX.prototype.privateRequest = function(method, params, callback) {
+OKEX.prototype.privateRequest = function(method, params, callback, requestOptions) {
     var functionName = 'OKEX.privateRequest()',
         self = this;
 
@@ -42,7 +41,8 @@ OKEX.prototype.privateRequest = function(method, params, callback) {
         url: this.server + '/api/v1/' + method + '.do',
         method: 'POST',
         headers: headers,
-        form: params
+        form: params,
+        ...requestOptions
     };
 
     var requestDesc = util.format('%s request to url %s with method %s and params %s',
@@ -89,7 +89,7 @@ function formatParameters(params) {
 }
 
 
-OKEX.prototype.publicRequest = function(method, params, callback) {
+OKEX.prototype.publicRequest = function(method, params, callback, requestOptions) {
     var functionName = 'OKEX.publicRequest()';
 
     if(!_.isObject(params)) {
@@ -110,7 +110,8 @@ OKEX.prototype.publicRequest = function(method, params, callback) {
         headers: headers,
         timeout: this.timeout,
         qs: params,
-        json: {}        // request will parse the json response into an object
+        json: {},        // request will parse the json response into an object
+        ...requestOptions
     };
 
     var requestDesc = util.format('%s request to url %s with parameters %s',
@@ -165,11 +166,11 @@ function executeRequest(options, requestDesc, callback) {
 // Public Functions
 //
 
-OKEX.prototype.getTicker = function getTicker(callback, symbol) {
-    this.publicRequest('ticker', {symbol: symbol}, callback);
+OKEX.prototype.getTicker = function getTicker(callback, symbol, options) {
+    this.publicRequest('ticker', {symbol: symbol}, callback, options);
 };
 
-OKEX.prototype.getDepth = function getDepth(callback, symbol, size, merge) {
+OKEX.prototype.getDepth = function getDepth(callback, symbol, size, merge, options) {
     var params = {
         symbol: symbol,
         size: 200,
@@ -179,38 +180,38 @@ OKEX.prototype.getDepth = function getDepth(callback, symbol, size, merge) {
     if (!_.isUndefined(size) ) params.size = size;
     if (!_.isUndefined(merge) ) params.merge = merge;
 
-    this.publicRequest('depth', params, callback);
+    this.publicRequest('depth', params, callback, options);
 };
 
-OKEX.prototype.getTrades = function getTrades(callback, symbol, since) {
+OKEX.prototype.getTrades = function getTrades(callback, symbol, since, options) {
     var params = {symbol: symbol};
     if (since) params.since = since;
 
-    this.publicRequest('trades', params, callback);
+    this.publicRequest('trades', params, callback, options);
 };
 
-OKEX.prototype.getKline = function getKline(callback, symbol, type, size, since) {
+OKEX.prototype.getKline = function getKline(callback, symbol, type, size, since, options) {
     var params = {symbol: symbol};
     if (type) params.type = type;
     if (size) params.size = size;
     if (since) params.since = since;
 
-    this.publicRequest('kline', params, callback);
+    this.publicRequest('kline', params, callback, options);
 };
 
-OKEX.prototype.getLendDepth = function getLendDepth(callback, symbol) {
-    this.publicRequest('kline', {symbol: symbol}, callback);
+OKEX.prototype.getLendDepth = function getLendDepth(callback, symbol, options) {
+    this.publicRequest('kline', {symbol: symbol}, callback, options);
 };
 
 //
 // Private Functions
 //
 
-OKEX.prototype.getUserInfo = function getUserInfo(callback) {
-    this.privateRequest('userinfo', {}, callback);
+OKEX.prototype.getUserInfo = function getUserInfo(callback, options) {
+    this.privateRequest('userinfo', {}, callback, options);
 };
 
-OKEX.prototype.addTrade = function addTrade(callback, symbol, type, amount, price) {
+OKEX.prototype.addTrade = function addTrade(callback, symbol, type, amount, price, options) {
     var params = {
         //api_key: this.api_key,
         symbol: symbol,
@@ -220,79 +221,79 @@ OKEX.prototype.addTrade = function addTrade(callback, symbol, type, amount, pric
     if (amount) params.amount = amount;
     if (price) params.price = price;
 
-    this.privateRequest('trade', params, callback);
+    this.privateRequest('trade', params, callback, options);
 };
 
-OKEX.prototype.addBatchTrades = function addBatchTrades(callback, symbol, type, orders) {
+OKEX.prototype.addBatchTrades = function addBatchTrades(callback, symbol, type, orders, options) {
     this.privateRequest('batch_trade', {
         symbol: symbol,
         type: type,
         orders_data: orders
-    }, callback);
+    }, callback, options);
 };
 
-OKEX.prototype.cancelOrder = function cancelOrder(callback, symbol, order_id) {
+OKEX.prototype.cancelOrder = function cancelOrder(callback, symbol, order_id, options) {
     this.privateRequest('cancel_order', {
         symbol: symbol,
         order_id: order_id
-    }, callback);
+    }, callback, options);
 };
 
-OKEX.prototype.getOrderInfo = function getOrderInfo(callback, symbol, order_id) {
+OKEX.prototype.getOrderInfo = function getOrderInfo(callback, symbol, order_id, options) {
     this.privateRequest('order_info', {
         symbol: symbol,
         order_id: order_id
-    }, callback);
+    }, callback, options);
 };
 
-OKEX.prototype.getOrdersInfo = function getOrdersInfo(callback, symbol, type, order_id) {
+OKEX.prototype.getOrdersInfo = function getOrdersInfo(callback, symbol, type, order_id, options) {
     this.privateRequest('orders_info', {
         symbol: symbol,
         type: type,
         order_id: order_id
-    }, callback);
+    }, callback, options);
 };
 
-OKEX.prototype.getAccountRecords = function getAccountRecords(callback, symbol, type, current_page, page_length) {
+OKEX.prototype.getAccountRecords = function getAccountRecords(callback, symbol, type, current_page, page_length, options) {
     this.privateRequest('account_records', {
         symbol: symbol,
         type: type,
         current_page: current_page,
         page_length: page_length
-    }, callback);
+    }, callback, options);
 };
 
-OKEX.prototype.getTradeHistory = function getTradeHistory(callback, symbol, since) {
+OKEX.prototype.getTradeHistory = function getTradeHistory(callback, symbol, since, options) {
     this.privateRequest('trade_history', {
         symbol: symbol,
         since: since
-    }, callback);
+    }, callback, options);
 };
 
-OKEX.prototype.getOrderHistory = function getOrderHistory(callback, symbol, status, current_page, page_length) {
+OKEX.prototype.getOrderHistory = function getOrderHistory(callback, symbol, status, current_page, page_length, options) {
     this.privateRequest('order_history', {
         symbol: symbol,
         status: status,
         current_page: current_page,
         page_length: page_length
-    }, callback);
+    }, callback, options);
 };
 
-OKEX.prototype.addWithdraw = function addWithdraw(callback, symbol, chargefee, trade_pwd, withdraw_address, withdraw_amount) {
+OKEX.prototype.addWithdraw = function addWithdraw(callback, symbol, chargefee, trade_pwd, withdraw_address, withdraw_amount, options) {
     this.privateRequest('withdraw', {
         symbol: symbol,
         chargefee: chargefee,
         trade_pwd: trade_pwd,
         withdraw_address: withdraw_address,
         withdraw_amount: withdraw_amount
-    }, callback);
+    }, callback, options);
 };
 
-OKEX.prototype.cancelWithdraw = function cancelWithdraw(callback, symbol, withdraw_id) {
+OKEX.prototype.cancelWithdraw = function cancelWithdraw(callback, symbol, withdraw_id, options) {
     this.privateRequest('cancel_withdraw', {
         symbol: symbol,
         withdraw_id: withdraw_id
-    }, callback);
+    }, callback, options);
 };
 
 /**

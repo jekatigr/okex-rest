@@ -2,11 +2,13 @@
 
 
 A node.js wrapper for the [REST APIs](hhttps://www.okex.com/rest_api.html) exposed by bitcoin exchange [OKEX](https://www.okex.com).
-You will need to have a registered account with [OKEX](https://www.okex.com) and generated API keys to access the private methods.
 
-Please contact support@okcoin.com if you are having trouble opening an account or generating an API key.
+This module is forked from [okex-rest](https://github.com/devmanio/okex-rest).
 
-This module is forked from [okcoin-china](https://github.com/xhad/okcoin-china).
+Changes:
+
+- Now it's possible to add any request properties
+- Header removed
 
 ### Install
 
