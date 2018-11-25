@@ -34,7 +34,6 @@ OKEX.prototype.privateRequest = function(method, params, callback, requestOption
     }
 
     params.api_key = this.api_key;
-    console.log(params)
     params.sign = this.signMessage(params);
 
     var options = {
