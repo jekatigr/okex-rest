@@ -1,4 +1,4 @@
-# OKEX  API Wrapper
+# OKEX API Wrapper 2
 
 
 A node.js wrapper for the [REST APIs](hhttps://www.okex.com/rest_api.html) exposed by bitcoin exchange [OKEX](https://www.okex.com).
@@ -9,13 +9,14 @@ Changes:
 
 - Now it's possible to add any request properties
 - Header removed
+- Callbacks moved to last argument (for [promisify](https://nodejs.org/dist/latest-v8.x/docs/api/util.html#util_util_promisify_original) compatibility)
 
 ### Install
 
-`npm install okex-rest`
+`npm install okex-rest2`
 
 ```js
-var OKEX = require('okex-rest');
+var OKEX = require('okex-rest2');
 
 // Test public data APIs
 var publicClient = new OKEX();
@@ -30,7 +31,7 @@ publicClient.getDepth(console.log, 'iota_btc');
 publicClient.getTrades(console.log);
 
 // replace the parameters with your API key and secret
-var privateClient = new OKCoin('your-api-key', 'your-api-secret');
+var privateClient = new OKEX('your-api-key', 'your-api-secret');
 
 privateClient.getUserInfo(console.log);
 

@@ -166,11 +166,11 @@ function executeRequest(options, requestDesc, callback) {
 // Public Functions
 //
 
-OKEX.prototype.getTicker = function getTicker(callback, symbol, options) {
+OKEX.prototype.getTicker = function getTicker(symbol, options, callback) {
     this.publicRequest('ticker', {symbol: symbol}, callback, options);
 };
 
-OKEX.prototype.getDepth = function getDepth(callback, symbol, size, merge, options) {
+OKEX.prototype.getDepth = function getDepth(symbol, size, merge, options, callback) {
     var params = {
         symbol: symbol,
         size: 200,
@@ -183,14 +183,14 @@ OKEX.prototype.getDepth = function getDepth(callback, symbol, size, merge, optio
     this.publicRequest('depth', params, callback, options);
 };
 
-OKEX.prototype.getTrades = function getTrades(callback, symbol, since, options) {
+OKEX.prototype.getTrades = function getTrades(symbol, since, options, callback) {
     var params = {symbol: symbol};
     if (since) params.since = since;
 
     this.publicRequest('trades', params, callback, options);
 };
 
-OKEX.prototype.getKline = function getKline(callback, symbol, type, size, since, options) {
+OKEX.prototype.getKline = function getKline(symbol, type, size, since, options, callback) {
     var params = {symbol: symbol};
     if (type) params.type = type;
     if (size) params.size = size;
@@ -199,7 +199,7 @@ OKEX.prototype.getKline = function getKline(callback, symbol, type, size, since,
     this.publicRequest('kline', params, callback, options);
 };
 
-OKEX.prototype.getLendDepth = function getLendDepth(callback, symbol, options) {
+OKEX.prototype.getLendDepth = function getLendDepth(symbol, options, callback) {
     this.publicRequest('kline', {symbol: symbol}, callback, options);
 };
 
@@ -207,11 +207,11 @@ OKEX.prototype.getLendDepth = function getLendDepth(callback, symbol, options) {
 // Private Functions
 //
 
-OKEX.prototype.getUserInfo = function getUserInfo(callback, options) {
+OKEX.prototype.getUserInfo = function getUserInfo(options, callback) {
     this.privateRequest('userinfo', {}, callback, options);
 };
 
-OKEX.prototype.addTrade = function addTrade(callback, symbol, type, amount, price, options) {
+OKEX.prototype.addTrade = function addTrade(symbol, type, amount, price, options, callback) {
     var params = {
         //api_key: this.api_key,
         symbol: symbol,
@@ -224,7 +224,7 @@ OKEX.prototype.addTrade = function addTrade(callback, symbol, type, amount, pric
     this.privateRequest('trade', params, callback, options);
 };
 
-OKEX.prototype.addBatchTrades = function addBatchTrades(callback, symbol, type, orders, options) {
+OKEX.prototype.addBatchTrades = function addBatchTrades(symbol, type, orders, options, callback) {
     this.privateRequest('batch_trade', {
         symbol: symbol,
         type: type,
@@ -232,21 +232,21 @@ OKEX.prototype.addBatchTrades = function addBatchTrades(callback, symbol, type, 
     }, callback, options);
 };
 
-OKEX.prototype.cancelOrder = function cancelOrder(callback, symbol, order_id, options) {
+OKEX.prototype.cancelOrder = function cancelOrder(symbol, order_id, options, callback) {
     this.privateRequest('cancel_order', {
         symbol: symbol,
         order_id: order_id
     }, callback, options);
 };
 
-OKEX.prototype.getOrderInfo = function getOrderInfo(callback, symbol, order_id, options) {
+OKEX.prototype.getOrderInfo = function getOrderInfo(symbol, order_id, options, callback) {
     this.privateRequest('order_info', {
         symbol: symbol,
         order_id: order_id
     }, callback, options);
 };
 
-OKEX.prototype.getOrdersInfo = function getOrdersInfo(callback, symbol, type, order_id, options) {
+OKEX.prototype.getOrdersInfo = function getOrdersInfo(symbol, type, order_id, options, callback) {
     this.privateRequest('orders_info', {
         symbol: symbol,
         type: type,
@@ -254,7 +254,7 @@ OKEX.prototype.getOrdersInfo = function getOrdersInfo(callback, symbol, type, or
     }, callback, options);
 };
 
-OKEX.prototype.getAccountRecords = function getAccountRecords(callback, symbol, type, current_page, page_length, options) {
+OKEX.prototype.getAccountRecords = function getAccountRecords(symbol, type, current_page, page_length, options, callback) {
     this.privateRequest('account_records', {
         symbol: symbol,
         type: type,
@@ -263,14 +263,14 @@ OKEX.prototype.getAccountRecords = function getAccountRecords(callback, symbol, 
     }, callback, options);
 };
 
-OKEX.prototype.getTradeHistory = function getTradeHistory(callback, symbol, since, options) {
+OKEX.prototype.getTradeHistory = function getTradeHistory(symbol, since, options, callback) {
     this.privateRequest('trade_history', {
         symbol: symbol,
         since: since
     }, callback, options);
 };
 
-OKEX.prototype.getOrderHistory = function getOrderHistory(callback, symbol, status, current_page, page_length, options) {
+OKEX.prototype.getOrderHistory = function getOrderHistory(symbol, status, current_page, page_length, options, callback) {
     this.privateRequest('order_history', {
         symbol: symbol,
         status: status,
@@ -279,7 +279,7 @@ OKEX.prototype.getOrderHistory = function getOrderHistory(callback, symbol, stat
     }, callback, options);
 };
 
-OKEX.prototype.addWithdraw = function addWithdraw(callback, symbol, chargefee, trade_pwd, withdraw_address, withdraw_amount, options) {
+OKEX.prototype.addWithdraw = function addWithdraw(symbol, chargefee, trade_pwd, withdraw_address, withdraw_amount, options, callback) {
     this.privateRequest('withdraw', {
         symbol: symbol,
         chargefee: chargefee,
@@ -289,7 +289,7 @@ OKEX.prototype.addWithdraw = function addWithdraw(callback, symbol, chargefee, t
     }, callback, options);
 };
 
-OKEX.prototype.cancelWithdraw = function cancelWithdraw(callback, symbol, withdraw_id, options) {
+OKEX.prototype.cancelWithdraw = function cancelWithdraw(symbol, withdraw_id, options, callback) {
     this.privateRequest('cancel_withdraw', {
         symbol: symbol,
         withdraw_id: withdraw_id
